@@ -996,9 +996,7 @@ document.getElementById('applyForm')?.addEventListener('submit', function (e) {
     alert("Вы уже отправляли заявку с этими данными.");
     return;
   }
-    const phone = document.getElementById('applyPhone').value.trim();
-    const password = document.getElementById('applyPassword').value.trim();
-
+ 
     // Проверка даты
     const dateParts = birth.split('.');
     const parsedDate = new Date(`${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`);
