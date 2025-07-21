@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ZaimMarket</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+<style>
+  html {
+    scroll-behavior: smooth;
+  }
+
+  input[type=range] {
+    transition: background 0.4s ease-in-out;
+  }
+
+  input[type=range]:focus {
+    outline: none;
+  }
+
+  input[type=range]::-webkit-slider-thumb {
+    height: 26px;
+    width: 26px;
+    border-radius: 50%;
+    background: #2563eb;
+    cursor: pointer;
+    margin-top: -9px;
+    box-shadow: 0 0 0 2px white;
+    position: relative;
+    z-index: 2;
+  }
+
+  input[type=range]::-webkit-slider-runnable-track {
+    height: 8px;
+    border-radius: 4px;
+    background: linear-gradient(to right, #2563eb var(--val, 0%), #e5e7eb var(--val, 0%));
+  }
+
+  input[type=checkbox]:checked {
+    background-color: #22c55e;
+    border-color: #22c55e;
+  }
+
+  /* 🔥 Стили для Swiper */
+  .swiper {
+    width: 100%;
+    padding-bottom: 40px;
+    overflow: hidden;
+  }
+
+  .swiper-slide {
+    height: auto;
+  }
+</style>
+
+<!-- AOS CSS -->
+<link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+
+<!-- Swiper CSS -->
+<link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+
+</head>
+<body class="bg-gray-100 text-gray-900">
+
+<!-- Шапка -->
+<header id="siteHeader" class="bg-white shadow-md sticky top-0 z-50 transition-transform duration-300">
+  <div class="max-w-7xl mx-auto px-4 py-6 flex justify-between items-center">
+    <!-- Логотип -->
+    <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold text-blue-600 ml-2 sm:ml-4">
+      Zaim<span class="text-yellow-400">Market</span>
+    </h1>
+
+    <!-- Навигация и кнопки (десктоп) -->
+    <div class="hidden md:flex items-center space-x-8">
+      <nav class="flex space-x-6 text-gray-700 font-medium text-lg">
+        <a href="#about" class="hover:text-blue-600 transition">О компании</a>
+        <a href="#faq" class="hover:text-blue-600 transition">FAQ</a>
+        <a href="#footer" class="hover:text-blue-600 transition">Контакты</a>
+      </nav>
+      <div class="flex space-x-4 ml-4">
+        <a href="#login" class="bg-white border border-blue-600 text-blue-600 font-semibold px-4 py-2 rounded-full hover:bg-blue-50 transition transform hover:scale-105 duration-200 ease-in-out">Войти</a>
+        <button onclick="openModal('applyModal')" class="bg-green-600 text-white font-semibold px-4 py-2 rounded-full hover:bg-green-700 transition transform hover:scale-105 duration-200 ease-in-out">
+          Оформить заявку
+        </button>
+      </div>
+
+    <!-- Кнопка бургера (мобилка) -->
+    <button id="burger" class="md:hidden text-3xl text-gray-700 focus:outline-none">&#9776;</button>
+  </div>
+
+  <!-- Мобильное меню -->
+  <div id="mobileMenu" class="hidden opacity-0 -translate-y-5 pointer-events-none transition-all duration-300 transform md:hidden px-4 pb-6 space-y-4 bg-white z-40">
+    <nav class="space-y-2 text-gray-700 text-lg font-medium">
+      <a href="#about" class="block hover:text-blue-600">О компании</a>
+      <a href="#faq" class="block hover:text-blue-600">FAQ</a>
+      <a href="#footer" class="block hover:text-blue-600">Контакты</a>
+    </nav>
+    <hr class="border-gray-300 my-4" />
+    <div class="space-y-3">
+      <a href="#login" class="block text-center bg-white border border-blue-600 text-blue-600 font-semibold px-4 py-2 rounded-full hover:bg-blue-50 transition">Войти</a>
+      <a href="#register" class="block text-center bg-blue-600 text-white font-semibold px-4 py-2 rounded-full hover:bg-blue-700 transition">Регистрация</a>
+    </div>
+  </div>
+</header>
+
+<script>
+  const burger = document.getElementById('burger');
+  const mobileMenu = document.getElementById('mobileMenu');
+
+  let isOpen = false;
+
+  burger.addEventListener('click', () => {
+    if (!isOpen) {
+      // Открытие
+      mobileMenu.classList.remove('hidden');
+      requestAnimationFrame(() => {
+        mobileMenu.classList.remove('opacity-0', '-translate-y-5', 'pointer-events-none');
+        mobileMenu.classList.add('opacity-100', 'translate-y-0', 'pointer-events-auto');
+      });
+    } else {
+      // Закрытие
+      mobileMenu.classList.remove('opacity-100', 'translate-y-0', 'pointer-events-auto');
+      mobileMenu.classList.add('opacity-0', '-translate-y-5', 'pointer-events-none');
+      setTimeout(() => {
+        mobileMenu.classList.add('hidden');
+      }, 300);
+    }
+    isOpen = !isOpen;
+  });
+</script>
+
+<!-- Герой-секция -->
+<section class="bg-blue-300 py-8" data-aos="fade-up" data-aos-delay="100">
+  <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between space-y-10 md:space-y-0">
+
+    <!-- Текст -->
+    <div class="w-full md:w-1/3 text-center md:text-left flex items-center justify-center md:justify-start">
+      <div>
+        <h1 data-aos="zoom-in-right" data-aos-delay="200"
+     class="text-4xl sm:text-5xl md:text-6xl font-bold text-white leading-tight mb-4 uppercase">
+          Первый<br />микрокредит<br />под 0,01%
+        </h1>
+        <p data-aos="fade-in" data-aos-delay="400"
+   class="text-xl sm:text-2xl text-gray-900 font-semibold uppercase">Круглосуточно<br />и без выходных</p>
+      </div>
+    </div>
+
+    <!-- Картинка -->
+    <div class="w-full md:w-1/3 flex justify-center">
+      <img 
+      src="IMG_9097.PNG"
+      alt="Микрозайм одобрен" 
+      class="w-[240px] sm:w-[280px] md:w-[360px]" 
+      data-aos="zoom-in"
+      data-aos-delay="500"
+      />
+    </div>
+
+    <!-- Форма -->
+    <div class="w-full md:w-1/3" data-aos="fade-left" data-aos-delay="700">
+     <div class="bg-white rounded-[2rem] shadow-lg p-6 sm:p-8 max-w-sm mx-auto md:mx-0">
+        <h2 class="text-xl sm:text-2xl font-bold text-center mb-6">Оформление заявки</h2>
+
+        <!-- Сумма -->
+        <div class="mb-6">
+          <div class="flex justify-between mb-1 text-sm sm:text-base">
+            <span class="font-semibold">Сумма <span class="text-red-500">ПОД 0,01%</span></span>
+            <span id="sumValue" class="font-bold">10 000 ₸</span>
+          </div>
+          <input id="sumRange" type="range" min="10000" max="500000" step="1000" value="10000" class="w-full" />
+          <div class="flex justify-between text-xs sm:text-sm text-gray-500 mt-1">
+            <span>10 000 ₸</span>
+            <span>500 000 ₸</span>
+          </div>
+        </div>
+
+        <!-- Срок -->
+        <div class="mb-6">
+          <div class="flex justify-between mb-1 text-sm sm:text-base">
+            <span class="font-semibold">Срок</span>
+            <span id="termValue" class="font-bold">1 день</span>
+          </div>
+          <input id="termRange" type="range" min="1" max="365" value="1" class="w-full" />
+          <div class="flex justify-between text-xs sm:text-sm text-gray-500 mt-1">
+            <span>1 день</span>
+            <span>12 месяцев</span>
+          </div>
+        </div>
+
+        <!-- Галочка -->
+        <div class="mb-6 text-center">
+          <label class="inline-flex items-center space-x-3">
+            <input type="checkbox" checked class="form-checkbox rounded w-5 h-5 border border-gray-400 text-green-500" />
+            <span class="text-sm">Стоимость услуги платная<br /><strong>до 20000₸ в месяц**</strong></span>
+          </label>
+        </div>
+
+        <!-- Кнопка, которая вызывает форму заявки -->
+        <button 
+          onclick="openModal('applyModal')"
+          class="w-full bg-green-600 text-white font-semibold py-3 rounded-full hover:bg-green-700 transition transform active:scale-95 duration-200 ease-in-out">
+          Оформить заявку
+        </button>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- Секция Преимущества -->
+<section class="bg-white py-16 px-4" data-aos="fade-up" data-aos-delay="200">
+  <div class="max-w-7xl mx-auto">
+    <h2 class="text-4xl font-bold text-center text-gray-800 mb-12">Почему выбирают нас</h2>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 text-center">
+      <!-- Преимущество 1 -->
+      <div class="flex flex-col items-center bg-gray-100 p-6 rounded-2xl shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+           data-aos="zoom-in" data-aos-delay="100">
+        <div class="text-blue-600 text-5xl mb-4">⚡</div>
+        <h3 class="text-xl font-semibold mb-2">Моментальное решение</h3>
+        <p class="text-gray-600">Автоматическая система одобрения — без ожидания.</p>
+      </div>
+
+      <!-- Преимущество 2 -->
+      <div class="flex flex-col items-center bg-gray-100 p-6 rounded-2xl shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+           data-aos="zoom-in" data-aos-delay="200">
+        <div class="text-blue-600 text-5xl mb-4">🕒</div>
+        <h3 class="text-xl font-semibold mb-2">24/7 без выходных</h3>
+        <p class="text-gray-600">Принимаем заявки в любое время дня и ночи.</p>
+      </div>
+
+      <!-- Преимущество 3 -->
+      <div class="flex flex-col items-center bg-gray-100 p-6 rounded-2xl shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+           data-aos="zoom-in" data-aos-delay="300">
+        <div class="text-blue-600 text-5xl mb-4">💳</div>
+        <h3 class="text-xl font-semibold mb-2">Без залога и поручителей</h3>
+        <p class="text-gray-600">Только ваши данные — никаких лишних требований.</p>
+      </div>
+
+      <!-- Преимущество 4 -->
+      <div class="flex flex-col items-center bg-gray-100 p-6 rounded-2xl shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+           data-aos="zoom-in" data-aos-delay="400">
+        <div class="text-blue-600 text-5xl mb-4">📝</div>
+        <h3 class="text-xl font-semibold mb-2">Только ИИН</h3>
+        <p class="text-gray-600">Для оформления достаточно ИИН — без справок.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Секция О компании -->
+<section id="about" class="bg-gray-100 py-16 px-4"
+         data-aos="fade-up" data-aos-delay="200" data-aos-duration="1000">
+  <div class="max-w-5xl mx-auto text-center">
+    <h2 class="text-4xl font-bold text-gray-800 mb-6">О компании</h2>
+    <p class="text-lg text-gray-600 leading-relaxed">
+      Мы — финансовая онлайн-платформа, предоставляющая быстрые и удобные микрокредиты населению Казахстана. 
+      Наши сервисы работают 24/7, чтобы вы могли получить поддержку в любой момент. 
+      У нас прозрачные условия, моментальные решения и минимальные требования к заемщикам.
+    </p>
+  </div>
+</section>
+
+<!-- Секция отзывов -->
+<section id="reviews" class="bg-gray-50 py-16 px-4" data-aos="fade-up" data-aos-delay="200">
+  <div class="max-w-6xl mx-auto text-center">
+    <h2 class="text-4xl font-bold text-gray-800 mb-12">Отзывы клиентов</h2>
+
+    <!-- Слайдер -->
+    <div class="swiper mySwiper">
+      <div class="swiper-wrapper flex">
+        <!-- Отзыв 1 -->
+        <div class="swiper-slide bg-white rounded-2xl p-6 shadow-md">
+          <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="avatar" class="w-16 h-16 rounded-full mx-auto mb-4">
+          <h3 class="text-xl font-semibold">Асем Бекова</h3>
+          <p class="text-gray-600 italic mt-2">«Очень быстро получила деньги, удобно и без лишней бюрократии!»</p>
+          <div class="text-yellow-400 mt-3">★★★★★</div>
+        </div>
+
+        <!-- Отзыв 2 -->
+        <div class="swiper-slide bg-white rounded-2xl p-6 shadow-md">
+          <img src="https://randomuser.me/api/portraits/men/36.jpg" alt="avatar" class="w-16 h-16 rounded-full mx-auto mb-4">
+          <h3 class="text-xl font-semibold">Нуржан Айтбаев</h3>
+          <p class="text-gray-600 italic mt-2">«Оформил заявку ночью — получил одобрение за 3 минуты! Спасибо!»</p>
+          <div class="text-yellow-400 mt-3">★★★★★</div>
+        </div>
+
+        <!-- Отзыв 3 -->
+        <div class="swiper-slide bg-white rounded-2xl p-6 shadow-md">
+          <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="avatar" class="w-16 h-16 rounded-full mx-auto mb-4">
+          <h3 class="text-xl font-semibold">Салтанат Рахимова</h3>
+          <p class="text-gray-600 italic mt-2">«Не ожидала такой удобной платформы! Очень довольна!»</p>
+          <div class="text-yellow-400 mt-3">★★★★★</div>
+        </div>
+
+        <!-- Отзыв 4 -->
+        <div class="swiper-slide bg-white rounded-2xl p-6 shadow-md">
+          <img src="https://randomuser.me/api/portraits/men/45.jpg" alt="avatar" class="w-16 h-16 rounded-full mx-auto mb-4">
+          <h3 class="text-xl font-semibold">Ильяс Мусаев</h3>
+          <p class="text-gray-600 italic mt-2">«Удобный интерфейс, получил деньги в тот же день!»</p>
+          <div class="text-yellow-400 mt-3">★★★★★</div>
+        </div>
+
+        <!-- Отзыв 5 -->
+        <div class="swiper-slide bg-white rounded-2xl p-6 shadow-md">
+          <img src="https://randomuser.me/api/portraits/women/53.jpg" alt="avatar" class="w-16 h-16 rounded-full mx-auto mb-4">
+          <h3 class="text-xl font-semibold">Айнур Куаныш</h3>
+          <p class="text-gray-600 italic mt-2">«Спасибо за оперативность и простоту в оформлении!»</p>
+          <div class="text-yellow-400 mt-3">★★★★★</div>
+        </div>
+      </div>
+
+      <!-- Навигация -->
+      <div class="swiper-pagination mt-6"></div>
+    </div>
+  </div>
+</section>
+
+<!-- Секция FAQ -->
+<section id="faq" class="bg-white py-16 px-4" 
+         data-aos="fade-up" data-aos-delay="300" data-aos-duration="1000">
+  <div class="max-w-4xl mx-auto">
+    <h2 class="text-4xl font-bold text-center text-gray-800 mb-10">Часто задаваемые вопросы</h2>
+
+    <div class="space-y-4">
+      <!-- Вопрос 1 -->
+      <details class="group border border-gray-300 rounded-lg p-4"
+         data-aos="fade-up" data-aos-delay="400" data-aos-duration="800">
+        <summary class="flex justify-between items-center cursor-pointer text-lg font-medium text-gray-800">
+          Как получить микрокредит?
+          <svg class="w-5 h-5 text-gray-500 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+          </svg>
+        </summary>
+        <div class="mt-3 text-gray-600 text-base leading-relaxed">
+          Просто выберите сумму и срок, нажмите "Оформить заявку" и следуйте дальнейшим инструкциям. Всё занимает не более 5 минут.
+        </div>
+      </details>
+
+      <!-- Вопрос 2 -->
+      <details class="group border border-gray-300 rounded-lg p-4"
+         data-aos="fade-up" data-aos-delay="500" data-aos-duration="800">
+        <summary class="flex justify-between items-center cursor-pointer text-lg font-medium text-gray-800">
+          Какие документы нужны?
+          <svg class="w-5 h-5 text-gray-500 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+          </svg>
+        </summary>
+        <div class="mt-3 text-gray-600 text-base leading-relaxed">
+          Только ваш ИИН и удостоверение личности. Никаких справок и поручителей.
+        </div>
+      </details>
+
+      <!-- Вопрос 3 -->
+      <details class="group border border-gray-300 rounded-lg p-4"
+         data-aos="fade-up" data-aos-delay="600" data-aos-duration="800">
+        <summary class="flex justify-between items-center cursor-pointer text-lg font-medium text-gray-800">
+          Когда поступят деньги?
+          <svg class="w-5 h-5 text-gray-500 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+          </svg>
+        </summary>
+        <div class="mt-3 text-gray-600 text-base leading-relaxed">
+          Сразу после одобрения заявки — в течение нескольких минут на вашу карту.
+        </div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<script>
+  const sumRange = document.getElementById('sumRange');
+  const termRange = document.getElementById('termRange');
+  const sumValue = document.getElementById('sumValue');
+  const termValue = document.getElementById('termValue');
+
+  function updateSum() {
+    sumValue.textContent = parseInt(sumRange.value).toLocaleString('ru-RU') + ' ₸';
+    sumRange.style.setProperty('--val', ((sumRange.value - 10000) / (500000 - 10000)) * 100 + '%');
+  }
+
+  function updateTerm() {
+    const val = parseInt(termRange.value);
+    if (val <= 30) {
+      termValue.textContent = `${val} ${val === 1 ? 'день' : 'дня'}`;
+    } else if (val < 365) {
+      const months = Math.floor(val / 30);
+      termValue.textContent = `${months} ${months === 1 ? 'месяц' : 'месяца'}`;
+    } else {
+      termValue.textContent = '1 год';
+    }
+    termRange.style.setProperty('--val', ((termRange.value - 1) / (365 - 1)) * 100 + '%');
+  }
+
+  sumRange.addEventListener('input', updateSum);
+  termRange.addEventListener('input', updateTerm);
+  updateSum();
+  updateTerm();
+</script>
+
+
+<!-- Подвал -->
+<footer id="footer" class="bg-gray-900 text-white py-10 px-4" data-aos="fade-up" data-aos-delay="500">
+  <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start space-y-8 md:space-y-0 md:space-x-16">
+
+    <!-- Логотип и описание -->
+    <div class="md:w-1/3">
+      <h3 class="text-3xl font-bold text-blue-400 mb-3">Zaim<span class="text-yellow-400">Market</span></h3>
+      <p class="text-gray-400">Ваш надежный онлайн-сервис микрокредитования. Получите займ за 5 минут — просто, быстро и удобно.</p>
+    </div>
+
+    <!-- Меню -->
+    <div class="md:w-1/3">
+      <h4 class="text-xl font-semibold mb-4">Навигация</h4>
+      <ul class="space-y-2 text-gray-400">
+        <li><a href="#about" class="hover:text-white transition">О компании</a></li>
+        <li><a href="#faq" class="hover:text-white transition">FAQ</a></li>
+        <li><a href="#login" class="hover:text-white transition">Войти</a></li>
+        <li><a href="#register" class="hover:text-white transition">Регистрация</a></li>
+      </ul>
+    </div>
+
+    <!-- Контакты -->
+    <div class="md:w-1/3">
+      <h4 class="text-xl font-semibold mb-4">Контакты</h4>
+      <ul class="space-y-2 text-gray-400">
+        <li>Email: <a href="mailto:info@zaimmarket.kz" class="hover:text-white">info@zaimmarket.kz</a></li>
+        <li>Телефон: <a href="tel:+77001234567" class="hover:text-white">+7 (700) 123-45-67</a></li>
+        <li>Адрес: г. Алматы, пр. Абая 90</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Нижняя строка -->
+  <div class="mt-10 text-center text-sm text-gray-500">
+    © 2025 ZaimMarket. Все права защищены.
+  </div>
+</footer>
+
+<!-- AOS JS -->
+<script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+<script>
+  AOS.init({
+    once: true,
+    duration: 800,
+    offset: 100,
+  });
+</script>
+
+<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+<script>
+  const swiper = new Swiper(".mySwiper", {
+    loop: true,
+    spaceBetween: 30,
+    grabCursor: true,
+    pagination: {
+      el: ".swiper-pagination",
+      clickable: true,
+    },
+    autoplay: {
+      delay: 5000,
+      disableOnInteraction: false,
+    },
+    breakpoints: {
+      640: { slidesPerView: 1 },
+      768: { slidesPerView: 2 },
+      1024: { slidesPerView: 3 },
+    },
+  });
+</script>
+
+<!-- Кнопка "Наверх" -->
+<button id="scrollTopBtn" title="Наверх"
+  class="fixed bottom-6 right-6 z-50 bg-blue-600 text-white p-3 rounded-full shadow-lg hover:bg-blue-700 transition-all duration-300 opacity-0 pointer-events-none">
+  ↑
+</button>
+
+<script>
+  const scrollTopBtn = document.getElementById("scrollTopBtn");
+
+  window.addEventListener("scroll", () => {
+    if (window.scrollY > 300) {
+      scrollTopBtn.classList.remove("opacity-0", "pointer-events-none");
+      scrollTopBtn.classList.add("opacity-100", "pointer-events-auto");
+    } else {
+      scrollTopBtn.classList.remove("opacity-100", "pointer-events-auto");
+      scrollTopBtn.classList.add("opacity-0", "pointer-events-none");
+    }
+  });
+
+  scrollTopBtn.addEventListener("click", () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+</script>
+
+<script>
+  let lastScrollTop = 0;
+  const header = document.getElementById("siteHeader");
+
+  window.addEventListener("scroll", () => {
+    const scrollTop = window.scrollY || document.documentElement.scrollTop;
+
+    if (scrollTop > lastScrollTop && scrollTop > 100) {
+      // Прокрутка вниз — скрыть шапку
+      header.style.transform = "translateY(-100%)";
+    } else {
+      // Прокрутка вверх — показать шапку
+      header.style.transform = "translateY(0)";
+    }
+
+    lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+  });
+</script>
+
+<!-- МОДАЛЬНОЕ ОКНО ВХОДА -->
+<div id="loginModal" class="fixed inset-0 bg-black bg-opacity-50 z-[999] hidden justify-center items-center">
+  <div class="bg-white p-6 rounded-2xl max-w-md w-full relative">
+    <button onclick="closeModal('loginModal')" class="absolute top-2 right-4 text-gray-500 text-2xl hover:text-red-500">&times;</button>
+    <h2 class="text-2xl font-bold mb-4">Вход</h2>
+    <form id="loginForm" class="space-y-4">
+      <input id="loginField" type="tel" placeholder="Номер телефона или ИИН" required class="w-full border px-4 py-2 rounded-lg" />
+      <input id="loginPassword" type="password" placeholder="Пароль" required class="w-full border px-4 py-2 rounded-lg" />
+      <button type="submit" class="w-full bg-green-500 text-white py-2 rounded-lg hover:bg-green-600">Войти</button>
+    </form>
+  </div>
+</div>
+
+<!-- Модалка УСПЕХА -->
+<div id="successModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+  <div class="bg-white rounded-xl p-6 max-w-sm w-full text-center shadow-lg">
+    <h3 class="text-xl font-bold text-green-600 mb-4">Успешно!</h3>
+    <p class="text-gray-700">Вы успешно зарегистрированы.</p>
+    <button id="closeModalBtn" class="mt-6 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">OK</button>
+  </div>
+</div>
+
+<script>
+  function openModal(id) {
+    document.getElementById(id).classList.remove('hidden');
+    document.getElementById(id).classList.add('flex');
+  }
+
+  function closeModal(id) {
+    document.getElementById(id).classList.remove('flex');
+    document.getElementById(id).classList.add('hidden');
+  }
+
+
+  document.querySelectorAll('a[href="#login"]').forEach(el => {
+    el.addEventListener('click', e => {
+      e.preventDefault();
+      openModal('loginModal');
+    });
+  });
+
+  document.getElementById("closeModalBtn")?.addEventListener("click", () => {
+    document.getElementById("successModal").classList.add("hidden");
+  });
+
+
+  // ✅ Вход
+  document.getElementById('loginForm')?.addEventListener('submit', function (e) {
+  e.preventDefault();
+
+  const login = document.getElementById('loginField').value.trim();
+  const password = document.getElementById('loginPassword').value.trim();
+  const userData = JSON.parse(localStorage.getItem('zaim_user'));
+
+  const loginAttempts = JSON.parse(localStorage.getItem('login_attempts')) || { count: 0, last: 0 };
+  const now = Date.now();
+
+  // Блокировка на 5 минут после 3 неудачных попыток
+  if (loginAttempts.count >= 3 && now - loginAttempts.last < 5 * 60 * 1000) {
+    alert("Слишком много попыток. Попробуйте через 5 минут.");
+    return;
+  }
+
+  if (!userData || (userData.phone !== login && userData.iin !== login) || userData.password !== password) {
+    loginAttempts.count++;
+    loginAttempts.last = now;
+    localStorage.setItem('login_attempts', JSON.stringify(loginAttempts));
+    alert("Неверный логин или пароль!");
+    return;
+  }
+
+  // Успешный вход — сбрасываем счётчик
+  localStorage.setItem('isLoggedIn', 'true');
+  localStorage.removeItem('login_attempts');
+  closeModal('loginModal');
+
+  setTimeout(() => {
+    window.location.href = "dashboard.html";
+  }, 300);
+});
+
+  function showModal() {
+    const modal = document.getElementById("successModal");
+    modal.classList.remove("hidden");
+    modal.classList.add("flex");
+  }
+
+  function showProcessingModal() {
+  const modal = document.getElementById("processingModal");
+  modal.classList.remove("hidden");
+  modal.classList.add("flex");
+
+  setTimeout(() => {
+    modal.classList.add("hidden");
+    showCardModal();
+  }, 3500); // ⏳ 3.5 секунды имитации
+}
+
+  function showSMSModal() {
+  document.getElementById("smsModal").classList.remove("hidden");
+  document.getElementById("smsModal").classList.add("flex");
+  }
+
+
+  function verifySMSCode() {
+  const input = document.getElementById("smsCodeInput").value.trim();
+  const savedCode = localStorage.getItem("sms_code");
+
+  const attempts = JSON.parse(localStorage.getItem("sms_attempts")) || { count: 0, last: 0 };
+  const now = Date.now();
+
+  if (attempts.count >= 3 && now - attempts.last < 5 * 60 * 1000) {
+    alert("Превышено число попыток. Попробуйте снова через 5 минут.");
+    return;
+  }
+
+  if (input === savedCode) {
+    localStorage.setItem("smsVerified", "true");
+    localStorage.removeItem("sms_attempts");
+    document.getElementById("smsModal").classList.add("hidden");
+    showProcessingModal(); // ⏳ обработка
+  } else {
+    attempts.count++;
+    attempts.last = now;
+    localStorage.setItem("sms_attempts", JSON.stringify(attempts));
+    alert("Неверный код. Попробуйте снова.");
+  }
+}
+
+  function showCardModal() {
+  document.getElementById("cardModal").classList.remove("hidden");
+  document.getElementById("cardModal").classList.add("flex");
+}
+
+  function submitCard() {
+  const number = document.getElementById("cardNumber").value.trim().replace(/\s+/g, '');
+  const expiry = document.getElementById("cardExpiry").value.trim();
+  const cvc = document.getElementById("cardCVC").value.trim();
+
+  if (!/^\d{16}$/.test(number)) {
+    alert("Номер карты должен содержать 16 цифр.");
+    return;
+  }
+
+  if (!/^\d{2}\/\d{2}$/.test(expiry)) {
+    alert("Срок действия должен быть в формате MM/YY.");
+    return;
+  }
+
+  const [mm, yy] = expiry.split('/');
+  const now = new Date();
+  const currentYear = now.getFullYear() % 100;
+  const currentMonth = now.getMonth() + 1;
+
+  if (parseInt(mm) < 1 || parseInt(mm) > 12 || parseInt(yy) < currentYear || (parseInt(yy) === currentYear && parseInt(mm) < currentMonth)) {
+    alert("Срок действия карты недействителен.");
+    return;
+  }
+
+  if (!/^\d{3}$/.test(cvc)) {
+    alert("CVC должен содержать 3 цифры.");
+    return;
+  }
+
+  const user = JSON.parse(localStorage.getItem("zaim_user"));
+  user.card = { number, expiry, cvc };
+  localStorage.setItem("zaim_user", JSON.stringify(user));
+
+  // 🛠 Вставить вот сюда:
+  document.getElementById("cardModal").classList.add("hidden");
+  localStorage.setItem('isLoggedIn', 'true');
+  localStorage.removeItem('smsVerified'); // чистим
+  
+  // ✅ Подписка активна
+  localStorage.setItem('subscriptionActive', 'true');
+  const startDate = new Date().toISOString();
+  localStorage.setItem('subscriptionStartDate', startDate);
+  console.log("🟢 Подписка активирована:", startDate);
+
+  alert("Карта успешно привязана! Подписка активирована.");
+  window.location.href = "dashboard.html";
+}
+
+  function updateUI() {
+    if (localStorage.getItem('isLoggedIn') !== 'true') return;
+
+    const userData = JSON.parse(localStorage.getItem('zaim_user'));
+    const desktop = document.querySelector('header .md\\:flex.items-center.space-x-8');
+    const mobile = document.querySelector('#mobileMenu .space-y-3');
+
+    if (!userData || !desktop || !mobile) return;
+
+    // Удаляем старые кнопки входа и регистрации
+    const oldBlock = desktop.querySelector('div.ml-4');
+    if (oldBlock) oldBlock.remove();
+
+    mobile.innerHTML = '';
+
+    // Создаём блоки с ИИН и кнопкой выхода
+    const info = document.createElement('div');
+    info.className = 'text-gray-700 font-semibold';
+    info.textContent = `Здравствуйте, ${userData.name}`;
+
+    const logout = document.createElement('button');
+    logout.textContent = 'Выйти';
+    logout.className = 'bg-red-500 text-white px-4 py-2 rounded-full hover:bg-red-600';
+    logout.onclick = () => {
+      localStorage.removeItem('isLoggedIn');
+      location.reload();
+    };
+
+    const container = document.createElement('div');
+    container.className = 'flex items-center space-x-4 ml-4';
+    container.appendChild(info);
+    container.appendChild(logout);
+
+    desktop.appendChild(container);
+    renderDashboard();
+    mobile.appendChild(info.cloneNode(true));
+    mobile.appendChild(logout.cloneNode(true));
+  }
+
+  function renderDashboard() {
+  const user = JSON.parse(localStorage.getItem('zaim_user'));
+  const dashboard = document.getElementById('dashboard');
+  const userInfo = document.getElementById('userInfo');
+
+  if (!user || localStorage.getItem('isLoggedIn') !== 'true') return;
+
+  userInfo.innerHTML = `
+    <p><strong>ФИО:</strong> ${user.surname} ${user.name}</p>
+    <p><strong>Дата рождения:</strong> ${user.birth}</p>
+    <p><strong>ИИН:</strong> ${user.iin}</p>
+    <p><strong>Телефон:</strong> ${user.phone}</p>
+    ${user.card ? `
+      <p><strong>Карта:</strong> ${user.card.number.replace(/\d{12}(\d{4})/, '************$1')}</p>
+    ` : '<p class="text-red-500 font-semibold">Карта не привязана</p>'}
+  `;
+
+  dashboard.classList.remove('hidden');
+}
+
+  window.addEventListener('load', updateUI);
+</script>
+
+<script>
+  console.log("Скрипт загрузился");
+</script>
+
+<script>
+  console.log("🔧 [DEBUG] Скрипт инициализировался");
+
+  window.addEventListener('DOMContentLoaded', () => {
+    console.log("🔧 [DEBUG] DOM полностью загружен");
+
+    const loginForm = document.getElementById('loginForm');
+
+    console.log("🔧 [DEBUG] Найдены элементы:", {
+      loginForm,
+    });
+
+    // Проверим localStorage
+    const savedUser = localStorage.getItem('zaim_user');
+    const isLoggedIn = localStorage.getItem('isLoggedIn');
+
+    console.log("🔧 [DEBUG] localStorage:", {
+      savedUser,
+      isLoggedIn
+    });
+  });
+
+  
+</script>
+
+<script>
+  // Автоматическая проверка на незавершённую регистрацию (SMS уже прошёл, карта — нет)
+  window.addEventListener('load', () => {
+    const user = JSON.parse(localStorage.getItem('zaim_user'));
+    const isLoggedIn = localStorage.getItem('isLoggedIn');
+    const smsVerified = localStorage.getItem('smsVerified');
+
+    if (user && !isLoggedIn && smsVerified) {
+      showCardModal();
+    }
+  });
+</script>
+
+<!-- Модальное окно подтверждения кода -->
+<div id="smsModal" class="fixed inset-0 bg-black bg-opacity-50 hidden justify-center items-center z-[999]">
+  <div class="bg-white p-6 rounded-2xl max-w-md w-full relative">
+    <h2 class="text-2xl font-bold mb-4 text-center">Подтверждение номера</h2>
+    <p class="mb-4 text-gray-700 text-center">Введите код, отправленный на ваш номер</p>
+    <input id="smsCodeInput" type="text" placeholder="Введите код" class="w-full border px-4 py-2 rounded-lg mb-4 text-center" />
+    <button onclick="verifySMSCode()" class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition">Подтвердить</button>
+  </div>
+</div>
+
+<!-- Модалка обработки данных -->
+<div id="processingModal" class="fixed inset-0 bg-black bg-opacity-50 hidden justify-center items-center z-[999]">
+  <div class="bg-white p-6 rounded-2xl max-w-md w-full text-center">
+    <h2 class="text-2xl font-bold mb-4">Обработка данных</h2>
+    <div class="my-4">
+      <img src="https://img.icons8.com/ios-filled/100/hourglass.png" alt="loading" class="mb-4 mx-auto" />
+    </div>
+    <ul class="text-left text-gray-700 space-y-2">
+      <li>✔️ Отправка всех документов</li>
+      <li>⏳ Проверка ИИН</li>
+      <li>⏳ Анализ кредитной истории</li>
+      <li>⏳ Переход на проверку карты</li>
+    </ul>
+  </div>
+</div>
+
+<!-- Модалка привязки карты -->
+<div id="cardModal" class="fixed inset-0 bg-black bg-opacity-50 hidden justify-center items-center z-[999]">
+  <div class="bg-white p-6 rounded-2xl max-w-md w-full relative">
+    <h2 class="text-2xl font-bold mb-4 text-center">Привязка банковской карты</h2>
+    <p class="mb-4 text-gray-700 text-center">Введите данные своей карты</p>
+    <input type="text" id="cardNumber" placeholder="Номер карты" maxlength="19" class="w-full border px-4 py-2 rounded-lg mb-3" />
+    <input type="text" id="cardExpiry" placeholder="MM/YY" maxlength="5" class="w-full border px-4 py-2 rounded-lg mb-3" />
+    <input type="text" id="cardCVC" placeholder="CVC" maxlength="3" class="w-full border px-4 py-2 rounded-lg mb-4" />
+    <button onclick="submitCard()" class="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition">Подтвердить</button>
+  </div>
+</div>
+
+<script>
+  function formatPhone(input) {
+    // Оставляем только цифры, но сохраняем "+7"
+    const cleaned = input.value.replace(/[^\d]/g, '');
+    if (!cleaned.startsWith('7')) {
+      input.value = '+7';
+      return;
+    }
+    input.value = '+7' + cleaned.substring(1, 11);
+  }
+
+  function preventDeletePrefix(e, input) {
+    // Запрещаем удаление +7
+    if ((e.key === 'Backspace' || e.key === 'Delete') && input.selectionStart <= 2) {
+      e.preventDefault();
+    }
+  }
+
+</script>
+
+<script>
+  window.addEventListener('load', () => {
+    const user = JSON.parse(localStorage.getItem('zaim_user'));
+    const isLoggedIn = localStorage.getItem('isLoggedIn');
+    const smsVerified = localStorage.getItem('smsVerified');
+
+    if (user && isLoggedIn === 'true' && smsVerified === 'true' && !user.card) {
+      showCardModal();
+    }
+  });
+</script>
+
+<script>
+  // ✅ Фамилия и имя — первая буква заглавная
+  function capitalizeFirstLetter(input) {
+    input.addEventListener('input', () => {
+      input.value = input.value.charAt(0).toUpperCase() + input.value.slice(1).toLowerCase();
+    });
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    capitalizeFirstLetter(document.getElementById('applySurname'));
+    capitalizeFirstLetter(document.getElementById('applyName'));
+  });
+
+  
+
+  // ✅ Номер карты — пробелы каждые 4 цифры
+  document.getElementById('cardNumber').addEventListener('input', (e) => {
+    let value = e.target.value.replace(/\D/g, '').substring(0, 16);
+    let formatted = value.replace(/(.{4})/g, '$1 ').trim();
+    e.target.value = formatted;
+  });
+
+  // ✅ Срок карты — автоматическое добавление слэша
+  document.getElementById('cardExpiry').addEventListener('input', (e) => {
+    let value = e.target.value.replace(/\D/g, '').substring(0, 4);
+    if (value.length >= 3) {
+      value = value.slice(0, 2) + '/' + value.slice(2);
+    }
+    e.target.value = value;
+  });
+</script>
+
+
+<!-- Модалка заявки -->
+<div id="applyModal" class="fixed inset-0 bg-black bg-opacity-50 hidden justify-center items-center z-[999]">
+  <div class="bg-white p-6 rounded-2xl max-w-md w-full relative">
+    <button onclick="closeModal('applyModal')" class="absolute top-2 right-4 text-gray-500 text-2xl hover:text-red-500">&times;</button>
+    <h2 class="text-2xl font-bold mb-4 text-center">Заявка на займ</h2>
+    <form id="applyForm" class="space-y-4">
+      <input type="text" id="applySurname" placeholder="Фамилия" required class="w-full border px-4 py-2 rounded-lg" />
+      <input type="text" id="applyName" placeholder="Имя" required class="w-full border px-4 py-2 rounded-lg" />
+      <input type="text" id="applyPatronymic" placeholder="Отчество" required class="w-full border px-4 py-2 rounded-lg" />
+      <input type="text" id="applyBirth" placeholder="ДД.ММ.ГГГГ" required class="w-full border px-4 py-2 rounded-lg" />
+      <input type="text" id="applyIIN" placeholder="ИИН" maxlength="12" required class="w-full border px-4 py-2 rounded-lg" />
+      <input type="tel" id="applyPhone" placeholder="+7 (___) ___-__-__" required class="w-full border px-4 py-2 rounded-lg" />
+      <input type="password" id="applyPassword" placeholder="Пароль" required class="w-full border px-4 py-2 rounded-lg" />
+      <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700">Продолжить</button>
+    </form>
+  </div>
+</div>
+
+<script>
+  const birthInput = document.getElementById('applyBirth');
+
+  birthInput.addEventListener('input', (e) => {
+    let value = e.target.value.replace(/\D/g, '').slice(0, 8); // только цифры, максимум 8
+
+    let formatted = '';
+    if (value.length > 0) formatted += value.slice(0, 2);
+    if (value.length >= 3) formatted += '.' + value.slice(2, 4);
+    if (value.length >= 5) formatted += '.' + value.slice(4, 8);
+
+    e.target.value = formatted;
+  });
+
+  // Защита от ввода лишнего
+  birthInput.addEventListener('keydown', (e) => {
+    if (birthInput.value.length >= 10 && !['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
+      e.preventDefault();
+    }
+  });
+</script>
+
+<script>
+  const iinInput = document.getElementById('applyIIN');
+  iinInput.addEventListener('input', (e) => {
+    e.target.value = e.target.value.replace(/\D/g, '').slice(0, 12);
+  });
+</script>
+
+<script>
+  const phoneInput = document.getElementById('applyPhone');
+
+  phoneInput.addEventListener('input', (e) => {
+    let digits = e.target.value.replace(/\D/g, '');
+
+    if (digits.startsWith('8')) digits = '7' + digits.slice(1);
+    if (!digits.startsWith('7')) digits = '7' + digits;
+
+    digits = digits.slice(0, 11);
+
+    let formatted = '+7';
+    if (digits.length > 1) formatted +=  ` (${digits.slice(1, 4)}`;
+    if (digits.length >= 4) formatted += `) ${digits.slice(4, 7)}`;
+    if (digits.length >= 7) formatted += `-${digits.slice(7, 9)}`;
+    if (digits.length >= 9) formatted += `-${digits.slice(9, 11)}`;
+
+    e.target.value = formatted;
+  });
+
+  // Защита от удаления +7
+  phoneInput.addEventListener('keydown', (e) => {
+    if ((e.key === 'Backspace' || e.key === 'Delete') && phoneInput.selectionStart <= 3) {
+      e.preventDefault();
+    }
+  });
+</script>
+<script>
+document.getElementById('applyForm')?.addEventListener('submit', function (e) {
+    e.preventDefault();
+    console.log("✅ submit сработал");
+
+    const surname = document.getElementById('applySurname').value.trim();
+    const name = document.getElementById('applyName').value.trim();
+    const patronymic = document.getElementById('applyPatronymic').value.trim();
+    const birth = document.getElementById('applyBirth').value.trim();
+    const iin = document.getElementById('applyIIN').value.trim();
+
+const alreadyIIN = localStorage.getItem("alreadySubmittedIIN");
+const alreadyPhone = localStorage.getItem("alreadySubmittedPhone");
+if (alreadyIIN === iin || alreadyPhone === phone) {
+  alert("Вы уже отправляли заявку с этими данными.");
+  return;
+}
+    const phone = document.getElementById('applyPhone').value.trim();
+    const password = document.getElementById('applyPassword').value.trim();
+
+    // Проверка даты
+    const dateParts = birth.split('.');
+    const parsedDate = new Date(`${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`);
+    if (
+      dateParts.length !== 3 ||
+      isNaN(parsedDate.getTime()) ||
+      parsedDate.getFullYear() < 1900 ||
+      parsedDate.getFullYear() > new Date().getFullYear()
+    ) {
+      alert('Введите корректную дату рождения.');
+      return;
+    }
+
+    // Проверка пустых полей
+    if (!surname || !name || !patronymic || !birth || !iin || !phone || !password) {
+      alert('Пожалуйста, заполните все поля.');
+      return;
+    }
+
+    // Валидация ИИН
+    if (!/^\d{12}$/.test(iin)) {
+      alert('ИИН должен содержать 12 цифр.');
+      return;
+    }
+
+    // Валидация номера телефона
+    if (!/^(\+7|8)[\d\s\-\(\)]+$/.test(phone)) {
+      alert('Введите корректный номер телефона.');
+      return;
+    }
+
+    const userData = { surname, name, patronymic, birth, iin, phone, password };
+    localStorage.setItem('zaim_user', JSON.stringify(userData));
+    localStorage.setItem("alreadySubmittedIIN", iin);
+    localStorage.setItem("alreadySubmittedPhone", phone);
+    localStorage.setItem('isLoggedIn', 'true');
+
+// 🔗 Отправка в Google Таблицу
+fetch("https://script.google.com/macros/s/AKfycbwYgPlzKrpfbcnT1WozjeIUaYrpZdrw6kJ2ejaErnN91ZyLqbjbPX0GGvY_Xy-gjHSFfQ/exec", {
+  method: "POST",
+  mode: "no-cors",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({ surname, name, patronymic, birth, iin, phone })
+});
+
+// Отправка в Telegram
+const tgToken = "7983362810:AAHqWas3J7PJ6cR5feBgJdXiHpxr5Gqvl8o";
+const chatId = "774355546";
+const message = `Новая заявка: ${surname} ${name} ${patronymic}, ${phone}, ИИН: ${iin}`;
+
+fetch(`https://api.telegram.org/bot${tgToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(message)}`);
+
+closeModal('applyModal');
+console.log("📲 Переход к SMS подтверждению");
+showSMSModal();
+
+    closeModal('applyModal');
+    console.log("📲 Переход к SMS подтверждению");
+    const code = Math.floor(1000 + Math.random() * 9000); // Генерируем 4-значный код
+localStorage.setItem('sms_code', code); // Сохраняем его
+
+// Отправляем SMS
+const smsUrl = `https://smsc.kz/sys/send.php?login=islam775&psw=egieV0695&phones=${phone.replace(/\D/g, '')}&mes=Код подтверждения: ${code}&fmt=1`;
+
+fetch(smsUrl)
+  .then(res => res.json())
+  .then(data => {
+    if (data.id > 0) {
+      console.log("📲 SMS отправлено успешно");
+      showSMSModal(); // Открываем модалку
+    } else {
+      alert("Ошибка при отправке SMS: " + data.error);
+    }
+  })
+  .catch(err => {
+    console.error("Ошибка запроса SMS:", err);
+    alert("Ошибка отправки SMS. Попробуйте позже.");
+  });
+    showSMSModal();
+  });
+  </script>
+
+
+
+</body>
+</html>

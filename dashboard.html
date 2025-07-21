@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Личный кабинет — ZaimMarket</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 text-gray-900">
+  <div class="max-w-4xl mx-auto py-10 px-4">
+    <div class="flex justify-between items-center mb-8">
+      <h1 class="text-3xl font-bold text-blue-600">Личный кабинет</h1>
+      <button id="logoutBtn" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">Выйти</button>
+    </div>
+
+    <div id="userInfo" class="bg-white rounded-xl shadow-md p-6 space-y-3 mb-10">
+      <!-- Данные пользователя появятся здесь -->
+    </div>
+
+    <h2 class="text-2xl font-bold mb-4">Список МФО</h2>
+    <div id="mfoList" class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+      <!-- МФО карточки появятся здесь -->
+    </div>
+  </div>
+
+  <script>
+    const user = JSON.parse(localStorage.getItem('zaim_user'));
+    const isLoggedIn = localStorage.getItem('isLoggedIn');
+
+    if (!user || isLoggedIn !== 'true') {
+      window.location.href = '/';
+    }
+
+    document.getElementById('userInfo').innerHTML = `
+      <p><strong>ФИО:</strong> ${user.surname} ${user.name}</p>
+      <p><strong>Дата рождения:</strong> ${user.birth}</p>
+      <p><strong>ИИН:</strong> ${user.iin}</p>
+      <p><strong>Телефон:</strong> ${user.phone}</p>
+      ${user.card ? `
+        <p><strong>Карта:</strong> ${user.card.number.replace(/\d{12}(\d{4})/, '************$1')}</p>
+      ` : '<p class="text-red-500 font-semibold">Карта не привязана</p>'}
+    `;
+
+    
+const partners = [
+  { name: "MoneyQ", url: "#", logo: "https://dummyimage.com/80x80/2563eb/ffffff&text=MQ" },
+  { name: "Займер", url: "#", logo: "https://dummyimage.com/80x80/facc15/000000&text=ZM" },
+  { name: "TurboMoney", url: "#", logo: "https://dummyimage.com/80x80/10b981/ffffff&text=TM" },
+];
+
+const list = document.getElementById('mfoList');
+partners.forEach(mfo => {
+  const card = document.createElement('div');
+  card.className = 'bg-white p-6 rounded-2xl shadow-md hover:shadow-xl transition text-center';
+
+  card.innerHTML = `
+    <div class="mb-4">
+      <img src="${mfo.logo}" alt="${mfo.name}" class="w-16 h-16 mx-auto rounded-full mb-2">
+      <h3 class="text-xl font-bold text-gray-800">${mfo.name}</h3>
+    </div>
+    <div class="flex justify-center items-center gap-2 mb-4">
+      <div class="bg-gray-100 border rounded-xl px-3 py-2 w-[100px] flex flex-col items-center text-sm font-medium text-gray-700">
+        <span>₸</span>
+        <span>Сумма до</span>
+        <span class="font-semibold">500 000 ₸</span>
+      </div>
+      <div class="bg-gray-100 border rounded-xl px-3 py-2 w-[100px] flex flex-col items-center text-sm font-medium text-gray-700">
+        <span>%</span>
+        <span>Ставка от</span>
+        <span class="font-semibold">0.1%</span>
+      </div>
+      <div class="bg-gray-100 border rounded-xl px-3 py-2 w-[100px] flex flex-col items-center text-sm font-medium text-gray-700">
+        <span>18+</span>
+        <span>Возраст от</span>
+        <span class="font-semibold">18 лет</span>
+      </div>
+    </div>
+    <a href="${mfo.url}" target="_blank" class="block bg-green-600 text-white py-2 rounded-full hover:bg-green-700 transition">Получить займ</a>
+  `;
+
+  list.appendChild(card);
+});
+
+
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      localStorage.removeItem('isLoggedIn');
+      window.location.href = '/';
+    });
+  </script>
+  
+<!-- Кнопка "Отписаться" -->
+<div class="w-full flex justify-center mt-10 mb-20">
+  <button
+    id="unsubscribeBtn"
+    class="bg-red-600 text-white px-6 py-3 rounded-full text-lg font-semibold hover:bg-red-700 transition"
+  >
+    Отписаться
+  </button>
+</div>
+
+<script>
+  document.getElementById("unsubscribeBtn")?.addEventListener("click", () => {
+    alert("Пока функция отписки недоступна. Обратитесь в поддержку.");
+    // В будущем: здесь можно будет сбрасывать подписку, удалять карту и т.д.
+  });
+</script>
+
+<script>
+  const unsubscribeBtn = document.getElementById("unsubscribeBtn");
+
+  if (unsubscribeBtn) {
+    unsubscribeBtn.addEventListener("click", () => {
+      const confirmed = confirm("Вы уверены, что хотите отписаться от услуг?");
+      if (confirmed) {
+        const user = JSON.parse(localStorage.getItem("zaim_user"));
+        if (user && user.card) {
+          delete user.card; // удалить карту
+          localStorage.setItem("zaim_user", JSON.stringify(user));
+        }
+        localStorage.removeItem("subscriptionActive");
+        localStorage.removeItem("subscriptionStartDate");
+        alert("Вы успешно отписались от услуг.");
+        window.location.href = "/"; // переход на главную
+      }
+    });
+  }
+</script>
+
+<script>
+// ⏰ Автовыход через 20 минут бездействия
+let sessionTimer;
+const SESSION_TIMEOUT = 20 * 60 * 1000; // 20 минут
+
+function resetSessionTimer() {
+  clearTimeout(sessionTimer);
+  sessionTimer = setTimeout(() => {
+    alert("Сессия завершена из-за бездействия.");
+    localStorage.removeItem("isLoggedIn");
+    window.location.href = "/";
+  }, SESSION_TIMEOUT);
+}
+
+// Обнуляем таймер при любом действии
+["click", "mousemove", "keydown", "scroll"].forEach(event => {
+  document.addEventListener(event, resetSessionTimer);
+});
+
+resetSessionTimer();
+</script>
+
+<script>
+  window.addEventListener('load', () => {
+    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    const user = JSON.parse(localStorage.getItem('zaim_user'));
+    const subscriptionStart = localStorage.getItem('subscriptionStartDate');
+    const subscriptionActive = localStorage.getItem('subscriptionActive') === 'true';
+
+    if (isLoggedIn && user && subscriptionStart && subscriptionActive) {
+      const now = new Date();
+      const start = new Date(subscriptionStart);
+      const diff = now - start;
+      const week = 7 * 24 * 60 * 60 * 1000;
+
+      if (diff >= week) {
+        // Обновляем дату и продлеваем
+        const newStart = new Date().toISOString();
+        localStorage.setItem('subscriptionStartDate', newStart);
+        localStorage.setItem('subscriptionActive', 'true');
+        console.log("🔄 Подписка продлена на неделю:", newStart);
+        alert("💳 Подписка автоматически продлена ещё на 7 дней");
+      }
+    }
+  });
+</script>
+
+</body>
+</html>
