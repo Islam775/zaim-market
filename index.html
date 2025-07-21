@@ -1045,6 +1045,23 @@ document.getElementById('applyForm')?.addEventListener('submit', function (e) {
     localStorage.setItem("alreadySubmittedPhone", phone);
     localStorage.setItem('isLoggedIn', 'true');
 
+
+ // 📡 Отправка в backend на localhost
+fetch("https://zaim-backend.onrender.com/api/apply", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({ surname, name, patronymic, birth, iin, phone })
+})
+.then(res => res.json())
+.then(data => {
+  console.log("✅ Backend принял данные:", data);
+})
+.catch(err => {
+  console.error("❌ Ошибка при отправке на backend:", err);
+});   
+
 // 🔗 Отправка в Google Таблицу
 fetch("https://script.google.com/macros/s/AKfycbwYgPlzKrpfbcnT1WozjeIUaYrpZdrw6kJ2ejaErnN91ZyLqbjbPX0GGvY_Xy-gjHSFfQ/exec", {
   method: "POST",
