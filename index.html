@@ -978,21 +978,24 @@
 </script>
 <script>
 document.getElementById('applyForm')?.addEventListener('submit', function (e) {
-    e.preventDefault();
-    console.log("✅ submit сработал");
+  e.preventDefault();
+  console.log("✅ submit сработал");
 
-    const surname = document.getElementById('applySurname').value.trim();
-    const name = document.getElementById('applyName').value.trim();
-    const patronymic = document.getElementById('applyPatronymic').value.trim();
-    const birth = document.getElementById('applyBirth').value.trim();
-    const iin = document.getElementById('applyIIN').value.trim();
+  const surname = document.getElementById('applySurname').value.trim();
+  const name = document.getElementById('applyName').value.trim();
+  const patronymic = document.getElementById('applyPatronymic').value.trim();
+  const birth = document.getElementById('applyBirth').value.trim();
+  const iin = document.getElementById('applyIIN').value.trim();
+  const phone = document.getElementById('applyPhone').value.trim(); // ⬅ ВЫШЕ!
+  const password = document.getElementById('applyPassword').value.trim();
 
-const alreadyIIN = localStorage.getItem("alreadySubmittedIIN");
-const alreadyPhone = localStorage.getItem("alreadySubmittedPhone");
-if (alreadyIIN === iin || alreadyPhone === phone) {
-  alert("Вы уже отправляли заявку с этими данными.");
-  return;
-}
+  const alreadyIIN = localStorage.getItem("alreadySubmittedIIN");
+  const alreadyPhone = localStorage.getItem("alreadySubmittedPhone");
+
+  if (alreadyIIN === iin && alreadyPhone === phone) {
+    alert("Вы уже отправляли заявку с этими данными.");
+    return;
+  }
     const phone = document.getElementById('applyPhone').value.trim();
     const password = document.getElementById('applyPassword').value.trim();
 
@@ -1079,8 +1082,6 @@ fetch(smsUrl)
     showSMSModal();
   });
   </script>
-
-
 
 </body>
 </html>
