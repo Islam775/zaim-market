@@ -1055,21 +1055,6 @@ fetch("https://script.google.com/macros/s/AKfycbwYgPlzKrpfbcnT1WozjeIUaYrpZdrw6k
   body: JSON.stringify({ surname, name, patronymic, birth, iin, phone })
 });
 
-// 📡 Отправка в backend на localhost
-fetch("http://localhost:3000/api/apply", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify({ surname, name, patronymic, birth, iin, phone })
-})
-.then(res => res.json())
-.then(data => {
-  console.log("✅ Backend принял данные:", data);
-})
-.catch(err => {
-  console.error("❌ Ошибка при отправке на backend:", err);
-});
 
 // Отправка в Telegram
 const tgToken = "7983362810:AAHqWas3J7PJ6cR5feBgJdXiHpxr5Gqvl8o";
