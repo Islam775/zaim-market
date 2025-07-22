@@ -1089,8 +1089,12 @@ fetch("https://zaim-backend.onrender.com/send-sms", {
     const data = JSON.parse(text);
     console.log("📲 Ответ от backend:", data);
     if (data.success) {
-      localStorage.setItem("confirmationCode", code);
-      showSMSModal();
+  localStorage.setItem("confirmationCode", code);
+
+  setTimeout(() => {
+    showSMSModal(); // ⏱ вызываем с задержкой
+  }, 50); // 50 мс — достаточно, чтобы DOM успел обработать
+
     } else {
       alert("Ошибка при отправке SMS: " + data.error);
     }
