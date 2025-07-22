@@ -810,15 +810,6 @@
   });
 </script>
 
-<!-- Модальное окно подтверждения кода -->
-<div id="smsModal" class="fixed inset-0 bg-black bg-opacity-50 hidden justify-center items-center z-[999]">
-  <div class="bg-white p-6 rounded-2xl max-w-md w-full relative">
-    <h2 class="text-2xl font-bold mb-4 text-center">Подтверждение номера</h2>
-    <p class="mb-4 text-gray-700 text-center">Введите код, отправленный на ваш номер</p>
-    <input id="smsCodeInput" type="text" placeholder="Введите код" class="w-full border px-4 py-2 rounded-lg mb-4 text-center" />
-    <button onclick="verifySMSCode()" class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition">Подтвердить</button>
-  </div>
-</div>
 
 <!-- Модалка обработки данных -->
 <div id="processingModal" class="fixed inset-0 bg-black bg-opacity-50 hidden justify-center items-center z-[999]">
@@ -1091,20 +1082,23 @@ fetch("https://zaim-backend.onrender.com/send-sms", {
   },
   body: JSON.stringify({ phone, code })
 })
-.then(res => res.json())
+.then(res => {
+  if (!res.ok) throw new Error("Не удалось получить ответ от сервера");
+  return res.json();
+})
 .then(data => {
   console.log("📲 Ответ от backend:", data);
   if (data.success) {
-    showSMSModal(); // 💥 теперь точно сработает
+    localStorage.setItem("confirmationCode", code);
+    showSMSModal();
   } else {
     alert("Ошибка при отправке SMS: " + data.error);
   }
 })
 .catch(err => {
-  console.error("Ошибка запроса на backend:", err);
+  console.error("❌ Ошибка запроса на backend:", err);
   alert("Ошибка отправки SMS. Попробуйте позже.");
 });
-
 
 });
 
