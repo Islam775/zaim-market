@@ -1104,29 +1104,8 @@ fetch("https://zaim-backend.onrender.com/send-sms", {
 });
 
 
-// Отправляем SMS
-// Отправляем на backend
-fetch("https://zaim-backend.onrender.com/send-sms", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify({ phone, code })
-})
-.then(res => {
-  if (res.ok) {
-    console.log("📲 SMS отправлено через backend");
-    showSMSModal();
-  } else {
-    alert("Ошибка при отправке SMS.");
-  }
-})
-.catch(err => {
-  console.error("Ошибка запроса на backend:", err);
-  alert("Ошибка отправки SMS. Попробуйте позже.");
 });
-    showSMSModal();
-  });
+  
   </script>
 
 </body>
