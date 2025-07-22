@@ -1120,28 +1120,24 @@ fetch("https://zaim-backend.onrender.com/send-sms", {
 </div>
 
 <script>
-function showSMSModal() {
-  const modal = document.getElementById("smsModal");
-  modal.classList.remove("hidden");
-  document.getElementById("smsCodeInput").focus();
-}
+  function showSMSModal() {
+    const modal = document.getElementById("smsModal");
 
-function hideSMSModal() {
-  document.getElementById("smsModal").classList.add("hidden");
-}
+    if (!modal) {
+      console.error("❌ Модалка не найдена в DOM");
+      return;
+    }
 
-function verifySMSCode() {
-  const entered = document.getElementById("smsCodeInput").value.trim();
-  const saved = localStorage.getItem("confirmationCode");
+    // Убираем hidden
+    modal.classList.remove("hidden");
+    // Принудительно показываем
+    modal.style.display = "flex";
 
-  if (entered === saved) {
-    alert("✅ Код подтвержден!");
-    hideSMSModal();
-    showCardModal(); // вызываем следующее окно (если оно есть)
-  } else {
-    alert("❌ Неверный код. Попробуйте снова.");
+    const input = document.getElementById("smsCodeInput");
+    if (input) input.focus();
+
+    console.log("✅ showSMSModal() выполнен");
   }
-}
 </script>
 </body>
 </html>
