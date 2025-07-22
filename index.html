@@ -1124,14 +1124,21 @@ fetch("https://zaim-backend.onrender.com/send-sms", {
     const modal = document.getElementById("smsModal");
 
     if (!modal) {
-      console.error("❌ Модалка не найдена в DOM");
+      console.error("❌ Модалка SMS не найдена");
       return;
     }
 
+    // 💥 Закрываем модалку заявки
+    const apply = document.getElementById("applyModal");
+    if (apply) {
+      apply.classList.add("hidden");
+      apply.style.display = "none";
+      console.log("✅ applyModal скрыта");
+    }
+
+    // 💥 Открываем SMS-модалку
     modal.classList.remove("hidden");
     modal.classList.add("flex");
-
-    // Обнуляем старые стили на display
     modal.style.display = "";
     modal.style.opacity = "1";
 
