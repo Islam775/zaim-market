@@ -1128,10 +1128,12 @@ fetch("https://zaim-backend.onrender.com/send-sms", {
       return;
     }
 
-    // Убираем hidden
     modal.classList.remove("hidden");
-    // Принудительно показываем
-    modal.style.display = "flex";
+    modal.classList.add("flex");
+
+    // Обнуляем старые стили на display
+    modal.style.display = "";
+    modal.style.opacity = "1";
 
     const input = document.getElementById("smsCodeInput");
     if (input) input.focus();
