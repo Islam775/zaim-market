@@ -1080,14 +1080,29 @@ const message = `Новая заявка: ${surname} ${name} ${patronymic}, ${ph
 
 fetch(`https://api.telegram.org/bot${tgToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(message)}`);
 
-closeModal('applyModal');
-console.log("📲 Переход к SMS подтверждению");
-showSMSModal();
-
-    closeModal('applyModal');
-    console.log("📲 Переход к SMS подтверждению");
-    const code = Math.floor(1000 + Math.random() * 9000); // Генерируем 4-значный код
+const code = Math.floor(1000 + Math.random() * 9000); // Генерируем 4-значный код
 localStorage.setItem('sms_code', code); // Сохраняем его
+
+fetch("https://zaim-backend.onrender.com/send-sms", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({ phone, code })
+})
+.then(res => {
+  if (res.ok) {
+    console.log("📲 SMS отправлено через backend");
+    showSMSModal(); // Переход к следующему шагу
+  } else {
+    alert("Ошибка при отправке SMS.");
+  }
+})
+.catch(err => {
+  console.error("Ошибка запроса на backend:", err);
+  alert("Ошибка отправки SMS. Попробуйте позже.");
+});
+
 
 // Отправляем SMS
 // Отправляем на backend
